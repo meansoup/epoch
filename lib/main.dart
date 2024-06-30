@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:highlight_text/highlight_text.dart';
 
 void main() {
   runApp(EpochTimeConverterApp());
@@ -24,22 +25,38 @@ class EpochTimeConverterPage extends StatefulWidget {
 }
 
 class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
-  final _epochController = TextEditingController();
+  final _inputController = TextEditingController();
   String _convertedTime = '';
+  Map<String, HighlightedWord> _highlights = {};
 
-  void _convertEpochToTime() {
-    final epoch = int.tryParse(_epochController.text);
-    if (epoch != null) {
-      final date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
-      final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
-      setState(() {
-        _convertedTime = formattedDate;
-      });
-    } else {
-      setState(() {
-        _convertedTime = 'Invalid epoch time';
-      });
-    }
+  void _highlightAndConvert() {
+    final inputText = _inputController.text;
+    final epochRegex = RegExp(r'\b\d{10}\b');  // Assuming epoch time is 10 digits
+    final matches = epochRegex.allMatches(inputText);
+
+    setState(() {
+      _highlights.clear();
+      if (matches.isNotEmpty) {
+        for (final match in matches) {
+          final epochString = match.group(0)!;
+          final epoch = int.tryParse(epochString);
+          if (epoch != null) {
+            final date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+            final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
+            _convertedTime = formattedDate;
+            _highlights[epochString] = HighlightedWord(
+              onTap: () {},
+              textStyle: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          }
+        }
+      } else {
+        _convertedTime = 'No valid epoch time found';
+      }
+    });
   }
 
   @override
@@ -53,22 +70,35 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
         child: Column(
           children: [
             TextField(
-              controller: _epochController,
-              keyboardType: TextInputType.number,
+              controller: _inputController,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Enter Epoch Time',
+                labelText: 'Enter text with Epoch Time',
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _convertEpochToTime,
+              onPressed: _highlightAndConvert,
               child: Text('Convert'),
             ),
             SizedBox(height: 20),
             Text(
               _convertedTime,
               style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: TextHighlight(
+                  text: _inputController.text,
+                  words: _highlights,
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

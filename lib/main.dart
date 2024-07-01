@@ -72,7 +72,8 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
           children: [
             TextField(
               controller: _inputController,
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Enter text with Epoch Time',

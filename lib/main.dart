@@ -97,7 +97,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
                   children: _convertedTimes.map((entry) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text('${entry.key}: ${entry.value}',
+                      child: SelectableText('${entry.key}: ${entry.value}',
                         style: TextStyle(fontSize: 16),
                       ),
                     );

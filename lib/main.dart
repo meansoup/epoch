@@ -70,15 +70,19 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _inputController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter text with Epoch Time',
-              ),
-              onChanged: (_) => _highlightAndConvert(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: TextField(
+                  controller: _inputController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Enter text with Epoch Time',
+                  ),
+                  onChanged: (_) => _highlightAndConvert(),
+                ),
+              )
             ),
             SizedBox(height: 20),
             Text(
@@ -86,16 +90,20 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: _convertedTimes.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text('${entry.key}: ${entry.value}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                );
-              }).toList(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: _convertedTimes.map((entry) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Text('${entry.key}: ${entry.value}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
             ),
             SizedBox(height: 20),
             Expanded(

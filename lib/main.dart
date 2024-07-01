@@ -26,7 +26,7 @@ class EpochTimeConverterPage extends StatefulWidget {
 
 class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
   final _inputController = TextEditingController();
-  String _convertedTime = '';
+  Map<String, String> _convertedTimes = {};
   Map<String, HighlightedWord> _highlights = {};
 
   void _highlightAndConvert() {
@@ -35,7 +35,9 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
     final matches = epochRegex.allMatches(inputText);
 
     setState(() {
+      _convertedTimes.clear();
       _highlights.clear();
+
       if (matches.isNotEmpty) {
         for (final match in matches) {
           final epochString = match.group(0)!;
@@ -43,7 +45,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
           if (epoch != null) {
             final date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
             final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
-            _convertedTime = formattedDate;
+            _convertedTimes[epochString] = formattedDate;
             _highlights[epochString] = HighlightedWord(
               onTap: () {},
               textStyle: TextStyle(
@@ -53,8 +55,6 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
             );
           }
         }
-      } else {
-        _convertedTime = 'No valid epoch time found';
       }
     });
   }
@@ -81,8 +81,20 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
             ),
             SizedBox(height: 20),
             Text(
-              _convertedTime,
-              style: TextStyle(fontSize: 20),
+              'Converted Times:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _convertedTimes.entries.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text('${entry.key}: ${entry.value}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }).toList(),
             ),
             SizedBox(height: 20),
             Expanded(

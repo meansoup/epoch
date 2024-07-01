@@ -31,7 +31,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
 
   void _highlightAndConvert() {
     final inputText = _inputController.text;
-    final epochRegex = RegExp(r'\b\d{10}\b');  // Assuming epoch time is 10 digits
+    final epochRegex = RegExp(r'\b\d{10,13}\b');  // Match 10 or 13 digits
     final matches = epochRegex.allMatches(inputText);
 
     setState(() {
@@ -43,7 +43,16 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
           final epochString = match.group(0)!;
           final epoch = int.tryParse(epochString);
           if (epoch != null) {
-            final date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+            DateTime date;
+            if (epochString.length == 10) {
+              // Handle second epoch time (10 digits)
+              date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+            } else if (epochString.length == 13) {
+              // Handle millisecond epoch time (13 digits)
+              date = DateTime.fromMillisecondsSinceEpoch(epoch);
+            } else {
+              continue;
+            }
             final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
             _convertedTimes.add(MapEntry(epochString, formattedDate));
             _highlights[epochString] = HighlightedWord(
@@ -82,7 +91,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
                   ),
                   onChanged: (_) => _highlightAndConvert(),
                 ),
-              )
+              ),
             ),
             SizedBox(height: 20),
             Text(
@@ -103,7 +112,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
                     );
                   }).toList(),
                 ),
-              )
+              ),
             ),
             SizedBox(height: 20),
             Expanded(

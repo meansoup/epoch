@@ -68,6 +68,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _inputController,
@@ -76,11 +77,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
                 border: OutlineInputBorder(),
                 labelText: 'Enter text with Epoch Time',
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _highlightAndConvert,
-              child: Text('Convert'),
+              onChanged: (_) => _highlightAndConvert(),
             ),
             SizedBox(height: 20),
             Text(

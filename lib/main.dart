@@ -26,7 +26,7 @@ class EpochTimeConverterPage extends StatefulWidget {
 
 class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
   final _inputController = TextEditingController();
-  Map<String, String> _convertedTimes = {};
+  List<MapEntry<String, String>> _convertedTimes = [];
   Map<String, HighlightedWord> _highlights = {};
 
   void _highlightAndConvert() {
@@ -45,7 +45,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
           if (epoch != null) {
             final date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
             final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
-            _convertedTimes[epochString] = formattedDate;
+            _convertedTimes.add(MapEntry(epochString, formattedDate));
             _highlights[epochString] = HighlightedWord(
               onTap: () {},
               textStyle: TextStyle(
@@ -88,7 +88,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
             SizedBox(height: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: _convertedTimes.entries.map((entry) {
+              children: _convertedTimes.map((entry) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text('${entry.key}: ${entry.value}',

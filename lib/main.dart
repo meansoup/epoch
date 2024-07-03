@@ -31,7 +31,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
 
   void _highlightAndConvert() {
     final inputText = _inputController.text;
-    final epochRegex = RegExp(r'\b\d{10,13}\b');  // Match 10 or 13 digits
+    final epochRegex = RegExp(r'\b\d{10,13}\b'); // Match 10 or 13 digits
     final matches = epochRegex.allMatches(inputText);
 
     setState(() {
@@ -68,6 +68,10 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
     });
   }
 
+  String _getConvertedTimesText() {
+    return _convertedTimes.map((entry) => '${entry.key}: ${entry.value}').join('\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,16 +105,9 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
             SizedBox(height: 10),
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: _convertedTimes.map((entry) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: SelectableText('${entry.key}: ${entry.value}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    );
-                  }).toList(),
+                child: SelectableText(
+                  _getConvertedTimesText(),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),

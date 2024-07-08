@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:highlight_text/highlight_text.dart';
@@ -14,7 +15,63 @@ class EpochTimeConverterApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: EpochTimeConverterPage(),
+      home: LoadingScreen(),
+    );
+  }
+}
+
+class LoadingScreen extends StatefulWidget {
+  @override
+  _LoadingScreenState createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Simulate a delay for loading
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => EpochTimeConverterPage()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: 'If you put all the strings in, find the epochTime and convert it.\n',
+                  ),
+                  TextSpan(
+                    text: '{"site":"backendbrew.com/epoch/","requestedAt":',
+                  ),
+                  TextSpan(
+                    text: '1719760000',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: ', others ...',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="/epoch/">
 
   <meta charset="UTF-8">
@@ -67,10 +54,9 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "1576156365";
+    const serviceWorkerVersion = "1289472568";
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2432479090372596" crossorigin="anonymous"></script>
   <script src="flutter.js" defer></script>
 </head>
 <body>
@@ -96,6 +82,13 @@
           });
         }
       });
+
+      // Load Google Ads script after the splash screen is hidden
+      const adsScript = document.createElement('script');
+      adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2432479090372596';
+      adsScript.async = true;
+      adsScript.crossOrigin = 'anonymous';
+      document.body.appendChild(adsScript);
     });
   </script>
 </body>

@@ -57,7 +57,6 @@
     const serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2432479090372596" crossorigin="anonymous"></script>
   <script src="flutter.js" defer></script>
 </head>
 <body>
@@ -83,6 +82,13 @@
           });
         }
       });
+
+      // Load Google Ads script after the splash screen is hidden
+      const adsScript = document.createElement('script');
+      adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2432479090372596';
+      adsScript.async = true;
+      adsScript.crossOrigin = 'anonymous';
+      document.body.appendChild(adsScript);
     });
   </script>
 </body>

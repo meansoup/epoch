@@ -78,6 +78,7 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
   late GradientTextEditingController _inputController;
   List<MapEntry<String, String>> _convertedTimes = [];
   Map<String, HighlightedWord> _highlights = {};
+  String _selectedTimeFormat = 'UTC'; // 추가: 선택된 시간대 형식
 
   @override
   void initState() {
@@ -103,14 +104,22 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
             DateTime date;
             if (epochString.length == 10) {
               // Handle second epoch time (10 digits)
-              date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+              date = DateTime.fromMillisecondsSinceEpoch(epoch * 1000, isUtc: true);
             } else if (epochString.length == 13) {
               // Handle millisecond epoch time (13 digits)
-              date = DateTime.fromMillisecondsSinceEpoch(epoch);
+              date = DateTime.fromMillisecondsSinceEpoch(epoch, isUtc: true);
             } else {
               continue;
             }
-            final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
+
+            String formattedDate;
+            if (_selectedTimeFormat == 'UTC') {
+              formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(date.toUtc());
+            } else {
+              final localDate = date.toLocal();
+              formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(localDate);
+            }
+
             _convertedTimes.add(MapEntry(epochString, formattedDate));
             _highlights[epochString] = HighlightedWord(
               onTap: () {},
@@ -141,6 +150,13 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
     super.dispose();
   }
 
+  void _onTimeFormatChanged(String? newValue) {
+    setState(() {
+      _selectedTimeFormat = newValue!;
+      _highlightAndConvert();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,9 +185,23 @@ class _EpochTimeConverterPageState extends State<EpochTimeConverterPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              'Converted Times:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  'Converted Times:        ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                DropdownButton<String>(
+                  value: _selectedTimeFormat,
+                  items: <String>['UTC', 'Local Time'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: _onTimeFormatChanged,
+                ),
+              ],
             ),
             SizedBox(height: 10),
             Expanded(
